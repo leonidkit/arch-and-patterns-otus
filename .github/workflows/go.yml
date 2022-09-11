@@ -22,6 +22,6 @@ jobs:
           go mod download
       - name: Build
         run: |
-          go build -v -o /dev/null ./cmd/options-gen
+          go build -v -o /dev/null ./
       - name: Test
         run: go test -v ./...
