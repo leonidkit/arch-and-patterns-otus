@@ -4,24 +4,16 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.18]
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Set up Go ${{ matrix.go_version }}
-        uses: actions/setup-go@v1
+      - name: Set up Go
+        uses: actions/setup-go@v3
         with:
-          go-version: ${{ matrix.go_version }}
-        id: go
+          go-version: 1.18
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v1
 
-      - name: Get dependencies
-        run: |
-          go mod download
-      - name: Build
-        run: |
-          go build -v -o /dev/null ./
       - name: Test
         run: go test -v ./...
