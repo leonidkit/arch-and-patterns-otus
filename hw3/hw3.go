@@ -18,7 +18,8 @@ type Queue interface {
 
 func QueueProcessing(queue Queue, eh *ErrorHandler) (err error) {
 	for !queue.IsEmpty() {
-		cmd, err := queue.Pop()
+		var cmd ICommand
+		cmd, err = queue.Pop()
 		if err != nil {
 			return fmt.Errorf("queue Pop() command error: %w", err)
 		}
@@ -37,5 +38,5 @@ func QueueProcessing(queue Queue, eh *ErrorHandler) (err error) {
 			}
 		}
 	}
-	return nil
+	return
 }

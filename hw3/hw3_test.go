@@ -1,6 +1,7 @@
 package hw3
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -91,6 +92,32 @@ func TestQueueProcessing(t *testing.T) {
 		err := QueueProcessing(queueMock, eh)
 		if err != nil {
 			panic("unexpected error")
+		}
+	})
+
+	t.Run("wrong error strategy test", func(t *testing.T) {
+		eh := NewErrorHandler()
+
+		eh.Setup(
+			CommandName,
+			errConnectionError,
+			func(cmd ICommand, err error) ICommand {
+				return NewRepeatCommand(cmd, err)
+			},
+		)
+
+		ctrl := gomock.NewController(t)
+
+		cmdMock := NewMockICommand(ctrl)
+		cmdMock.EXPECT().Execute().Return(errors.New("new type of error"))
+		cmdMock.EXPECT().Name().Return(CommandName)
+
+		queueMock := new(queue)
+		queueMock.Push(cmdMock)
+
+		err := QueueProcessing(queueMock, eh)
+		if err == nil {
+			panic("expected error")
 		}
 	})
 }
