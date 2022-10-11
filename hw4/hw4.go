@@ -62,7 +62,7 @@ func (m *Macrocommand) Execute() error {
 }
 
 // MoveAndBurnFuelCommand - реализовать команду движения по прямой с расходом топлива, используя команды с предыдущих шагов.
-func MoveAndBurnFuelCommand(m Movable, f Fuelable) *Macrocommand {
+func NewMoveAndBurnFuelCommand(m Movable, f Fuelable) *Macrocommand {
 	return NewMacrocommand(
 		NewMoveCommand(m),
 		NewBurnFuelCommand(f),
@@ -70,7 +70,7 @@ func MoveAndBurnFuelCommand(m Movable, f Fuelable) *Macrocommand {
 }
 
 // RotateAndChangeVelocityCommnad - реализовать команду поворота, которая еще и меняет вектор мгновенной скорости, если есть.
-func RotateAndChangeVelocityCommnad(r Rotable, vc VelocityChangable) *Macrocommand {
+func NewRotateAndChangeVelocityCommnad(r Rotable, vc VelocityChangable) *Macrocommand {
 	return NewMacrocommand(
 		NewRotateCommand(r),
 		NewChangeVelocityCommand(vc),
