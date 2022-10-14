@@ -136,11 +136,11 @@ func (m *MockMovable) EXPECT() *MockMovableMockRecorder {
 }
 
 // Position mocks base method.
-func (m *MockMovable) Position() (float64, float64) {
+func (m *MockMovable) Position() (int64, int64) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Position")
-	ret0, _ := ret[0].(float64)
-	ret1, _ := ret[1].(float64)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(int64)
 	return ret0, ret1
 }
 
@@ -151,7 +151,7 @@ func (mr *MockMovableMockRecorder) Position() *gomock.Call {
 }
 
 // SetPosition mocks base method.
-func (m *MockMovable) SetPosition(x, y float64) error {
+func (m *MockMovable) SetPosition(x, y int64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetPosition", x, y)
 	ret0, _ := ret[0].(error)
@@ -165,7 +165,7 @@ func (mr *MockMovableMockRecorder) SetPosition(x, y interface{}) *gomock.Call {
 }
 
 // SetVelocity mocks base method.
-func (m *MockMovable) SetVelocity(x, y float64) error {
+func (m *MockMovable) SetVelocity(x, y int64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetVelocity", x, y)
 	ret0, _ := ret[0].(error)
@@ -179,11 +179,11 @@ func (mr *MockMovableMockRecorder) SetVelocity(x, y interface{}) *gomock.Call {
 }
 
 // Velocity mocks base method.
-func (m *MockMovable) Velocity() (float64, float64) {
+func (m *MockMovable) Velocity() (int64, int64) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Velocity")
-	ret0, _ := ret[0].(float64)
-	ret1, _ := ret[1].(float64)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(int64)
 	return ret0, ret1
 }
 
@@ -295,22 +295,22 @@ func (m *MockVelocityChangable) EXPECT() *MockVelocityChangableMockRecorder {
 	return m.recorder
 }
 
-// Direction mocks base method.
-func (m *MockVelocityChangable) Direction() int64 {
+// Angle mocks base method.
+func (m *MockVelocityChangable) Angle() int64 {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Direction")
+	ret := m.ctrl.Call(m, "Angle")
 	ret0, _ := ret[0].(int64)
 	return ret0
 }
 
-// Direction indicates an expected call of Direction.
-func (mr *MockVelocityChangableMockRecorder) Direction() *gomock.Call {
+// Angle indicates an expected call of Angle.
+func (mr *MockVelocityChangableMockRecorder) Angle() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Direction", reflect.TypeOf((*MockVelocityChangable)(nil).Direction))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Angle", reflect.TypeOf((*MockVelocityChangable)(nil).Angle))
 }
 
 // SetVelocity mocks base method.
-func (m *MockVelocityChangable) SetVelocity(x, y float64) error {
+func (m *MockVelocityChangable) SetVelocity(x, y int64) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetVelocity", x, y)
 	ret0, _ := ret[0].(error)
@@ -323,17 +323,16 @@ func (mr *MockVelocityChangableMockRecorder) SetVelocity(x, y interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetVelocity", reflect.TypeOf((*MockVelocityChangable)(nil).SetVelocity), x, y)
 }
 
-// Velocity mocks base method.
-func (m *MockVelocityChangable) Velocity() (float64, float64) {
+// VelocityValue mocks base method.
+func (m *MockVelocityChangable) VelocityValue() int64 {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Velocity")
-	ret0, _ := ret[0].(float64)
-	ret1, _ := ret[1].(float64)
-	return ret0, ret1
+	ret := m.ctrl.Call(m, "VelocityValue")
+	ret0, _ := ret[0].(int64)
+	return ret0
 }
 
-// Velocity indicates an expected call of Velocity.
-func (mr *MockVelocityChangableMockRecorder) Velocity() *gomock.Call {
+// VelocityValue indicates an expected call of VelocityValue.
+func (mr *MockVelocityChangableMockRecorder) VelocityValue() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Velocity", reflect.TypeOf((*MockVelocityChangable)(nil).Velocity))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VelocityValue", reflect.TypeOf((*MockVelocityChangable)(nil).VelocityValue))
 }

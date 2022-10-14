@@ -3,7 +3,6 @@ package hw4
 import (
 	"errors"
 	"fmt"
-	"math"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -15,84 +14,66 @@ func TestChangeVelocityCommand_Execute(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	tests := []struct {
-		name    string
-		movable Movable
-		rotable Rotable
-		wantErr bool
-		want    []float64
-		err     error
+		name              string
+		velocityChangable VelocityChangable
+		wantErr           bool
+		err               error
 	}{
 		{
 			name: "movable and rotable object",
-			movable: func() Movable {
-				mock := NewMockMovable(ctrl)
-				mock.EXPECT().Velocity().Return(float64(1), float64(1))
-				mock.EXPECT().SetVelocity(FloatEq(-0.366), FloatEq(1.366))
+			velocityChangable: func() VelocityChangable {
+				mock := NewMockVelocityChangable(ctrl)
+				mock.EXPECT().Angle().Return(int64(45))
+				mock.EXPECT().VelocityValue().Return(int64(2))
+				mock.EXPECT().SetVelocity(int64Eq(int64(1)), int64Eq(int64(1)))
 				return mock
 			}(),
-			rotable: func() Rotable {
-				mock := NewMockRotable(ctrl)
-				mock.EXPECT().Direction().Return(int64(60))
-				return mock
-			}(),
-			want: []float64{-0.366, 1.366}, // x = x*cos(alpha)-y*sin(alpha) = 1*0.5-1*0.866 = -0.366
-			// y = x*sin(alpha)+y*cos(alpha) = 1*0.866 + 1*0.5 = 1.366
 		},
 		{
 			name: "not movable object",
-			movable: func() Movable {
-				mock := NewMockMovable(ctrl)
-				mock.EXPECT().Velocity().Return(float64(0), float64(0))
-				return mock
-			}(),
-			rotable: func() Rotable {
-				mock := NewMockRotable(ctrl)
+			velocityChangable: func() VelocityChangable {
+				mock := NewMockVelocityChangable(ctrl)
+				mock.EXPECT().Angle().Do(func() {
+					panic("not implemented")
+				})
 				return mock
 			}(),
 			wantErr: true,
-			err:     errObjectNotMovable,
+			err:     errExecuteError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := struct {
-				Movable
-				Rotable
-			}{tt.movable, tt.rotable}
-			cvc := NewChangeVelocityCommand(s)
+			cvc := NewChangeVelocityCommand(tt.velocityChangable)
 			err := cvc.Execute()
 			if err != nil && !tt.wantErr {
 				t.Fatalf("unexpected error: got = %s", err)
 			}
 			if !errors.Is(err, tt.err) {
-				t.Fatalf("got = %s, want = %s", err, tt.err)
+				t.Fatalf("got = %q, want = %q", err, tt.err)
 			}
 		})
 	}
 }
 
-type floatMatcher struct {
+type int64Matcher struct {
 	x any
 }
 
-func FloatEq(x any) gomock.Matcher { return floatMatcher{x} }
+func int64Eq(x any) gomock.Matcher { return int64Matcher{x} }
 
 // Matches returns whether x is a match.
-func (fm floatMatcher) Matches(x interface{}) bool {
+func (fm int64Matcher) Matches(x interface{}) bool {
 	switch x.(type) {
-	case float64:
-		return floatEqual(x.(float64), fm.x.(float64), float64EqualityThreshold)
+	case int64, int:
+		return x.(int64) == fm.x.(int64)
 	}
 	return false
 }
 
 // String describes what the matcher matches.
-func (fm floatMatcher) String() string {
-	return "is float equal"
-}
-
-func floatEqual(a, b float64, tolerance float64) bool {
-	return math.Abs(a-b) <= tolerance
+func (fm int64Matcher) String() string {
+	return fmt.Sprintf("int64 is equal %d", fm.x)
 }
 
 func TestCheckFuelCommand_Execute(t *testing.T) {

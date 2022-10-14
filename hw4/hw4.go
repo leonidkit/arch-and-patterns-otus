@@ -2,12 +2,14 @@ package hw4
 
 import (
 	"errors"
+	"fmt"
 	"math"
 )
 
 var (
 	errNotEnoughFueld   = errors.New("not enough fuel error")
 	errObjectNotMovable = errors.New("not movable object error")
+	errExecuteError     = errors.New("command Execute() error")
 )
 
 type ICommand interface {
@@ -22,10 +24,10 @@ type Fuelable interface {
 }
 
 type Movable interface {
-	Position() (float64, float64)
-	Velocity() (float64, float64)
-	SetPosition(x, y float64) error
-	SetVelocity(x, y float64) error
+	Position() (int64, int64)
+	Velocity() (int64, int64)
+	SetPosition(x, y int64) error
+	SetVelocity(x, y int64) error
 }
 
 type Rotable interface {
@@ -36,9 +38,9 @@ type Rotable interface {
 }
 
 type VelocityChangable interface {
-	Velocity() (float64, float64)
-	SetVelocity(x, y float64) error
-	Direction() int64
+	SetVelocity(x, y int64) error
+	VelocityValue() int64
+	Angle() int64
 }
 
 // Macrocommand - реализовать простейшую макрокоманду и тесты к ней.
@@ -143,15 +145,18 @@ func NewChangeVelocityCommand(obj VelocityChangable) *ChangeVelocityCommand {
 	return &ChangeVelocityCommand{obj}
 }
 
-func (cvc *ChangeVelocityCommand) Execute() error {
-	currVelX, currVelY := cvc.obj.Velocity()
-	if currVelX == 0 && currVelY == 0 {
-		return errObjectNotMovable
-	}
-	curDir := cvc.obj.Direction()
+func (cvc *ChangeVelocityCommand) Execute() (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%w: %s", errExecuteError, r)
+		}
+	}()
+
+	angl := cvc.obj.Angle()
+	vv := cvc.obj.VelocityValue()
 	return cvc.obj.SetVelocity(
-		currVelX*(math.Cos(toRadians(curDir)))-currVelY*(math.Sin(toRadians(curDir))),
-		currVelX*(math.Sin(toRadians(curDir))+currVelY*(math.Cos(toRadians(curDir)))),
+		int64(float64(vv)*math.Cos(toRadians(angl))),
+		int64(float64(vv)*math.Sin(toRadians(angl))),
 	)
 }
 
